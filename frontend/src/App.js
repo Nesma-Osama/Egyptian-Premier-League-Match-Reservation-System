@@ -1,9 +1,13 @@
-import React from 'react';
-import { useAuth } from './context/AuthContext';
-import AuthPage from './components/AuthPage';
-import Dashboard from './components/Dashboard';
-import AdminDashboard from './components/AdminDashboard';
-import './App.css';
+import React from "react";
+import { useAuth } from "./context/AuthContext";
+import { Routes, Route, Navigate } from "react-router-dom";
+
+import AuthPage from "./components/AuthPage";
+import Dashboard from "./components/Dashboard";
+import AdminDashboard from "./components/AdminDashboard";
+import MyReservation from "./components/MyReservation";
+
+import "./App.css";
 
 function App() {
   const { isAuthenticated, loading, user } = useAuth();
@@ -16,29 +20,37 @@ function App() {
     );
   }
 
-  // Not authenticated - show login page
-  if (!isAuthenticated) {
-    return (
-      <div className="App">
-        <AuthPage />
-      </div>
-    );
-  }
-
-  // Authenticated as Admin - show admin dashboard
-  if (user?.role === 'Admin') {
-    return (
-      <div className="App">
-        <AdminDashboard />
-      </div>
-    );
-  }
-
-  // Authenticated as regular user - show user dashboard
   return (
-    <div className="App">
-      <Dashboard />
-    </div>
+    <Routes>
+      <Route
+        path="/"
+        element={!isAuthenticated ? <AuthPage /> : <Navigate to="/dashboard" />}
+      />
+      <Route
+        path="/dashboard"
+        element={
+          isAuthenticated ? (
+            user?.role === "Admin" ? (
+              <AdminDashboard />
+            ) : (
+              <Dashboard />
+            )
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+      <Route
+        path="/my-reservations"
+        element={
+          isAuthenticated && user?.role !== "Admin" ? (
+            <MyReservation />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+    </Routes>
   );
 }
 

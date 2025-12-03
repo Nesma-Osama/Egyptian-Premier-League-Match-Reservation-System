@@ -1,10 +1,11 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from "react-router-dom";
 import './Dashboard.css';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
-
+  const navigate = useNavigate();
   const handleLogout = () => {
     logout();
     window.location.reload(); // Reload to show login page
@@ -41,7 +42,7 @@ const Dashboard = () => {
               <h3>Quick Actions</h3>
               <div className="action-buttons">
                 <button className="action-btn">View Matches</button>
-                <button className="action-btn">My Reservations</button>
+                <button className="action-btn"onClick={() => navigate("/my-reservations")}>My Reservations</button>
                 {user?.role === 'Manager' && <button className="action-btn">Manage Matches</button>}
               </div>
             </div>
