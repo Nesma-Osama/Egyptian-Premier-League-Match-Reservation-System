@@ -6,6 +6,7 @@ import AuthPage from "./components/AuthPage";
 import Dashboard from "./components/Dashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import MyReservation from "./components/MyReservation";
+import MyMatches from "./components/MyMatches";
 
 import "./App.css";
 
@@ -45,6 +46,16 @@ function App() {
         element={
           isAuthenticated && user?.role !== "Admin" ? (
             <MyReservation />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+      <Route
+        path="/my-matches"
+        element={
+          isAuthenticated && user?.role === "Manager" ? (
+            <MyMatches />
           ) : (
             <Navigate to="/" />
           )

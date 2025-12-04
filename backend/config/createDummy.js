@@ -4,7 +4,7 @@ const Stadium = require("../schemas/stadium");
 const Match = require("../schemas/match");
 const Seat = require("../schemas/seat");
 const Reservation = require("../schemas/reservation");
-const User = require("../schemas/user"); 
+const User = require("../schemas/user");
 const MONGO_URI = "mongodb://127.0.0.1:27017/epl_reservation";
 
 async function seed() {
@@ -93,18 +93,36 @@ async function seed() {
       seats: firstMatchSeats.map((s) => s._id),
       totalAmount: firstMatchSeats.reduce((sum, s) => sum + s.ticketPrice, 0),
     });
+    await Seat.updateMany(
+      { _id: { $in: firstMatchSeats.map((s) => s._id) } },
+      { $set: { state: "reserved" } }
+    );
+    const secondMatchSeats = createdSeats
+      .filter((s) => s.match.toString() === matches[1]._id.toString())
+      .slice(0, 3);
     await Reservation.create({
       match: matches[1]._id,
       user: user._id,
-      seats: firstMatchSeats.map((s) => s._id),
-      totalAmount: firstMatchSeats.reduce((sum, s) => sum + s.ticketPrice, 0),
+      seats: secondMatchSeats.map((s) => s._id),
+      totalAmount: secondMatchSeats.reduce((sum, s) => sum + s.ticketPrice, 0),
     });
+    await Seat.updateMany(
+      { _id: { $in: secondMatchSeats.map((s) => s._id) } },
+      { $set: { state: "reserved" } }
+    );
+    const thirdMatchSeats = createdSeats
+      .filter((s) => s.match.toString() === matches[2]._id.toString())
+      .slice(0, 3);
     await Reservation.create({
       match: matches[2]._id,
       user: user._id,
-      seats: firstMatchSeats.map((s) => s._id),
-      totalAmount: firstMatchSeats.reduce((sum, s) => sum + s.ticketPrice, 0),
+      seats: thirdMatchSeats.map((s) => s._id),
+      totalAmount: thirdMatchSeats.reduce((sum, s) => sum + s.ticketPrice, 0),
     });
+    await Seat.updateMany(
+      { _id: { $in: thirdMatchSeats.map((s) => s._id) } },
+      { $set: { state: "reserved" } }
+    );
 
     console.log("Reservation created");
 

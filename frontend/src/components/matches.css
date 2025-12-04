@@ -61,12 +61,13 @@
   color: #0b2e1a;
 }
 
-.stadium-row,
-.referee-row,
+
 .amount-row {
   margin-bottom: 8px;
 }
-
+.info-row{
+  margin-bottom: 8px;
+}
 .seats-section {
   margin: 10px 0;
 }
@@ -124,4 +125,20 @@
 
 .cancel-seat:hover {
   background: darkred;
+}
+.edit-match {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 4px 10px;          
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.8rem;       
+  float: right;              
+  transition: background-color 0.2s ease;
+  margin-right: 20px;
+}
+
+.edit-match:hover {
+  background-color: #218838; 
 }

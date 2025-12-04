@@ -75,7 +75,6 @@ const MyReservation = () => {
       setError("Not authenticated. Please login.");
       return;
     }
-
     fetchReservations();
   }, [user, authToken]);
 
@@ -83,7 +82,7 @@ const MyReservation = () => {
     return <div className="matches-wrap">Loading your reservations...</div>;
   if (error)
     return (
-      <div className="reservations-wrap">
+      <div className="matches-wrap">
         <div className="error">{error}</div>
         <button onClick={() => logout?.()}>Logout</button>
       </div>
@@ -116,12 +115,12 @@ const MyReservation = () => {
               </div>
 
               <div className="matches-body">
-                <div className="stadium-row">
+                <div className="info-row">
                   <strong>Stadium:</strong>{" "}
                   {match.stadium ? match.stadium.name : "—"}
                 </div>
 
-                <div className="referee-row">
+                <div className="info-row">
                   <strong>Referee:</strong> {match.referee || "—"}
                 </div>
 

@@ -12,7 +12,7 @@ router.get("/", authMiddleware, async (req, res) => {
         path: "match",
         populate: { path: "stadium" },
       })
-      .populate({ path: "seats" })
+      .populate("seats")
       .sort({ createdAt: -1 });
     res.json(reservations);
   } catch (err) {

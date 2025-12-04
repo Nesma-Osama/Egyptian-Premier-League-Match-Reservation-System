@@ -4,6 +4,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const reservations = require("./routes/reservations");
+const manager = require("./routes/manager");
 //const createDummy=require("./config/createDummy")
 require("dotenv").config();
 
@@ -21,6 +22,7 @@ connectDB();
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/reservations", reservations);
+app.use("/api/manager", manager);
 console.log("Auth routes mounted at /api/auth");
 console.log("Admin routes mounted at /api/admin");
 
