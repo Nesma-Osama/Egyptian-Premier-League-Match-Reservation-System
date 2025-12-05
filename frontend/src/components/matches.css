@@ -189,6 +189,36 @@
   max-height: 90vh;
   overflow-y: auto;
 }
+.cancel-seat {
+  margin-left: 10px;
+  background: crimson;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cancel-seat:hover {
+  background: darkred;
+}
+.edit-match {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 4px 10px;          
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.8rem;       
+  float: right;              
+  transition: background-color 0.2s ease;
+  margin-right: 20px;
+}
+
+.edit-match:hover {
+  background-color: #218838; 
+}
 
 @keyframes slideIn {
   from {
@@ -277,10 +307,39 @@
   background: #777;
 }
 
+
 .error {
   color: #8b0000;
   padding: 12px;
   background: #fff6f6;
   border-radius: 8px;
   border: 1px solid #ffdcd8;
+}
+.seats-section {
+  margin: 10px 0;
+}
+
+.seats-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.seat-state {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  border: 1px solid #e6f4ec;
+}
+
+.seat-reserved {
+  background: #0b6b3a;
+  color: #fff;
+}
+
+.seat-vacant {
+  background: #fff;
+  color: #0b6b3a;
+  border: 1px solid #0b6b3a;
 }
