@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }) => {
         // Check if user is logged in on component mount
         const storedUser = authService.getStoredUser();
         if (storedUser) {
+            console.log(storedUser)
             setUser(storedUser);
         }
         setLoading(false);

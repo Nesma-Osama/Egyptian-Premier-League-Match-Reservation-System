@@ -91,9 +91,9 @@ const MyMatches = () => {
     fetchData();
   }, [user, authToken]);
 
-  // ----------------------------
+  
   // MODAL: CREATE MATCH
-  // ----------------------------
+  
   const openCreateModal = () => {
     setEditMode(false);
     setFormError("");
@@ -108,9 +108,9 @@ const MyMatches = () => {
     setShowModal(true);
   };
 
-  // ----------------------------
+  
   // MODAL: EDIT MATCH
-  // ----------------------------
+  
   const openEditModal = (match) => {
     setEditMode(true);
     setFormError("");
@@ -128,9 +128,9 @@ const MyMatches = () => {
     setShowModal(true);
   };
 
-  // ----------------------------
+  
   // VALIDATION
-  // ----------------------------
+  
   const validateForm = () => {
     setFormError("");
 
@@ -181,9 +181,9 @@ const MyMatches = () => {
     return true;
   };
 
-  // ----------------------------
+  
   // SUBMIT (CREATE + EDIT)
-  // ----------------------------
+  
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
@@ -222,9 +222,9 @@ const MyMatches = () => {
     }
   };
 
-  // ----------------------------
+  
   // DELETE MATCH
-  // ----------------------------
+  
   const handleDelete = async (matchId) => {
     if (window.confirm("Are you sure you want to delete this match?")) {
       try {
@@ -248,9 +248,9 @@ const MyMatches = () => {
     }
   };
 
-  // ----------------------------
+  
   // UI STATES
-  // ----------------------------
+  
   if (loading)
     return <div className="matches-wrap">Loading your matches...</div>;
   if (error)
@@ -261,9 +261,9 @@ const MyMatches = () => {
       </div>
     );
 
-  // ----------------------------
-  // MAIN RETURN
-  // ----------------------------
+  
+  // MAIN RETURN --Nesma
+  
   return (
     <div className="matches-wrap">
       <h2 className="page-title">My Matches</h2>
