@@ -76,14 +76,24 @@ router.post("/", authMiddleware, async (req, res) => {
 
     const calculatedAmount = seats.reduce((sum, seat) => sum + seat.ticketPrice, 0);
 
-    const reservation = new Reservation({
+    let reservation = await Reservation.findOne({
       match: matchId,
       user: req.user.id,
-      seats: seatIds,
-      totalAmount: calculatedAmount,
     });
 
-    await reservation.save();
+    if (reservation) {
+      reservation.seats = [...reservation.seats, ...seatIds];
+      reservation.totalAmount += calculatedAmount;
+      await reservation.save();
+    } else {
+      reservation = new Reservation({
+        match: matchId,
+        user: req.user.id,
+        seats: seatIds,
+        totalAmount: calculatedAmount,
+      });
+      await reservation.save();
+    }
 
     await Seat.updateMany(
       { _id: { $in: seatIds } },
@@ -99,7 +109,7 @@ router.post("/", authMiddleware, async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "Reservation created successfully",
+      message: reservation ? "Seats added to existing reservation" : "Reservation created successfully",
       data: populatedReservation,
     });
   } catch (err) {
