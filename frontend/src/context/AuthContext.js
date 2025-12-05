@@ -49,8 +49,19 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
+    // Update user data (for profile updates)
+    const updateUser = (updatedUserData) => {
+        setUser(updatedUserData);
+        // Also update in localStorage if authService stores it there
+        const token = localStorage.getItem('token');
+        if (token) {
+            localStorage.setItem('user', JSON.stringify(updatedUserData));
+        }
+    };
+
     const value = {
         user,
+        setUser: updateUser, // Expose setUser for profile updates
         login,
         register,
         logout,

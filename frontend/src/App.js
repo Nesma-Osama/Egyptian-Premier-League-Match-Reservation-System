@@ -7,6 +7,7 @@ import Dashboard from "./components/Dashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import MyReservation from "./components/MyReservation";
 import MyMatches from "./components/MyMatches";
+import MyStadiums from "./components/MyStadiums";
 
 import "./App.css";
 
@@ -56,6 +57,16 @@ function App() {
         element={
           isAuthenticated && user?.role === "Manager" ? (
             <MyMatches />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
+      <Route
+        path="/my-stadiums"
+        element={
+          isAuthenticated && user?.role === "Manager" ? (
+            <MyStadiums />
           ) : (
             <Navigate to="/" />
           )

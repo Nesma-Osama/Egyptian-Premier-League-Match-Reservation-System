@@ -5,7 +5,8 @@ const authRoutes = require("./routes/auth");
 const adminRoutes = require("./routes/admin");
 const reservations = require("./routes/reservations");
 const manager = require("./routes/manager");
-//const createDummy=require("./config/createDummy")
+const users = require("./routes/users");
+// const createDummy=require("./config/createDummy")
 require("dotenv").config();
 
 const app = express();
@@ -15,26 +16,30 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Connect to database
-connectDB();
+// START APP ONLY AFTER DB CONNECTS
+const startServer = async () => {
+  await connectDB(); // ⬅️ WAIT for DB
 
-// Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/reservations", reservations);
-app.use("/api/manager", manager);
-console.log("Auth routes mounted at /api/auth");
-console.log("Admin routes mounted at /api/admin");
+  // Now DB is connected → safe to mount routes
+  app.use("/api/auth", authRoutes);
+  app.use("/api/admin", adminRoutes);
+  app.use("/api/reservations", reservations);
+  app.use("/api/manager", manager);
+  app.use("/api/users", users);
 
-// Test route
-app.get("/api/test", (req, res) => {
-  res.json({ message: "API is working!" });
-});
+  console.log("Auth routes mounted at /api/auth");
+  console.log("Admin routes mounted at /api/admin");
 
-// Basic route
-app.get("/", (req, res) => {
-  res.json({ message: "Egyptian Premier League API" });
-});
+  app.get("/api/test", (req, res) => {
+    res.json({ message: "API is working!" });
+  });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  app.get("/", (req, res) => {
+    res.json({ message: "Egyptian Premier League API" });
+  });
+
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+};
+
+startServer();  // ⬅️ FIXED

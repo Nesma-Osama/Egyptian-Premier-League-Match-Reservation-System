@@ -1,4 +1,4 @@
-.matches-wrap {
+.stadiums-wrap {
   max-width: 1000px;
   margin: 24px auto;
   padding: 16px;
@@ -29,13 +29,13 @@
   background: #095230;
 }
 
-.matches-list {
+.stadiums-list {
   display: grid;
   grid-template-columns: 1fr;
   gap: 14px;
 }
 
-.matches-card {
+.stadiums-card {
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
@@ -44,11 +44,11 @@
   transition: box-shadow 0.3s ease;
 }
 
-.matches-card:hover {
+.stadiums-card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-.matches-header {
+.stadiums-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -57,38 +57,60 @@
   padding: 12px 16px;
 }
 
-.teams {
-  display: flex;
-  gap: 8px;
+.stadium-name {
+  font-size: 1.2rem;
   font-weight: 700;
-  align-items: center;
 }
 
-.team {
-  background: rgba(255, 255, 255, 0.12);
-  padding: 6px 10px;
+.capacity-badge {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 6px 12px;
   border-radius: 6px;
-}
-
-.vs {
-  font-size: 0.85rem;
-  opacity: 0.8;
-}
-
-.date {
   font-size: 0.9rem;
-  opacity: 0.95;
+  font-weight: 600;
 }
 
-.matches-body {
+.stadiums-body {
   padding: 16px;
 }
 
-.match-actions {
+.edit-delete-btns {
   display: flex;
   gap: 8px;
   margin-bottom: 12px;
   justify-content: flex-end;
+}
+
+.edit-stadium {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.edit-stadium:hover {
+  background-color: #218838;
+}
+
+.delete-stadium {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.delete-stadium:hover {
+  background-color: #c82333;
 }
 
 .info-row {
@@ -101,66 +123,7 @@
   margin-right: 8px;
 }
 
-.edit-match,
-.delete-match {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
-  transition: background 0.3s ease;
-}
-
-.edit-match:hover {
-  background-color: #218838;
-}
-
-.delete-match {
-  background-color: #dc3545;
-}
-
-.delete-match:hover {
-  background-color: #c82333;
-}
-
-.stats-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 12px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #eaf7ee;
-}
-
-.stats-row p {
-  margin: 0;
-  font-size: 0.9rem;
-}
-
-.stats-row strong {
-  color: #0b6b3a;
-}
-
-.done {
-  background: #d4edda;
-  color: #155724;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-.scheduled {
-  background: #cfe2ff;
-  color: #084298;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 600;
-}
-
-.matches-footer {
+.stadiums-footer {
   padding: 10px 16px;
   color: #6b6b6b;
   background: #fbfff9;
@@ -186,8 +149,6 @@
   border-radius: 10px;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
   animation: slideIn 0.3s ease;
-  max-height: 90vh;
-  overflow-y: auto;
 }
 
 @keyframes slideIn {
@@ -207,22 +168,11 @@
   font-size: 1.3rem;
 }
 
-.form-error {
-  background: #f8d7da;
-  color: #721c24;
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 12px;
-  border: 1px solid #f5c6cb;
-  font-size: 0.9rem;
-}
-
 .modal-form {
   margin-bottom: 16px;
 }
 
-.modal-form input,
-.modal-form select {
+.modal-form input {
   width: 100%;
   padding: 8px;
   margin-bottom: 10px;
@@ -230,12 +180,9 @@
   border: 1px solid #ccc;
   font-size: 0.95rem;
   transition: border 0.3s ease;
-  background-color: white;
-  font-family: inherit;
 }
 
-.modal-form input:focus,
-.modal-form select:focus {
+.modal-form input:focus {
   outline: none;
   border-color: #0b6b3a;
   box-shadow: 0 0 4px rgba(11, 107, 58, 0.2);
@@ -283,4 +230,5 @@
   background: #fff6f6;
   border-radius: 8px;
   border: 1px solid #ffdcd8;
+  margin-bottom: 16px;
 }
