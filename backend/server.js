@@ -6,6 +6,7 @@ const adminRoutes = require("./routes/admin");
 const reservations = require("./routes/reservations");
 const manager = require("./routes/manager");
 const users = require("./routes/users");
+const matches = require("./routes/matches");
 // const createDummy=require("./config/createDummy")
 require("dotenv").config();
 
@@ -26,6 +27,7 @@ const startServer = async () => {
   app.use("/api/reservations", reservations);
   app.use("/api/manager", manager);
   app.use("/api/users", users);
+  app.use("/api/matches", matches);
 
   console.log("Auth routes mounted at /api/auth");
   console.log("Admin routes mounted at /api/admin");

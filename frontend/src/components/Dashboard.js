@@ -234,7 +234,7 @@ const Dashboard = () => {
           </div>
 
           {!user?.isAuthorized && (
-            <div className="pending-message">
+            <div className="pending-message" style={{ color: '#dc3545' }}>
               <p>
                 ⏳ Your account is waiting for admin approval. You'll be
                 notified once approved.
@@ -246,7 +246,12 @@ const Dashboard = () => {
             <div className="actions">
               <h3>Quick Actions</h3>
               <div className="action-buttons">
-                <button className="action-btn">View Matches</button>
+                <button 
+                  className="action-btn"
+                  onClick={() => navigate("/")}
+                >
+                  View Matches
+                </button>
                 <button
                   className="action-btn"
                   onClick={() => navigate("/my-reservations")}

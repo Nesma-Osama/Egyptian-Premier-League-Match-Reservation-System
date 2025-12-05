@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { authMiddleware } = require("../middleware/auth");
 const Reservation = require("../schemas/reservation");
-const match = require("../schemas/match");
-const seat = require("../schemas/seat");
-const stadium = require("../schemas/stadium");
+const Match = require("../schemas/match");
+const Seat = require("../schemas/seat");
+
 router.get("/", authMiddleware, async (req, res) => {
   try {
     const reservations = await Reservation.find({ user: req.user.id })
@@ -20,6 +20,98 @@ router.get("/", authMiddleware, async (req, res) => {
     res.status(500).send({ message: "Server error" });
   }
 });
+
+router.post("/", authMiddleware, async (req, res) => {
+  try {
+    const { matchId, seatIds, totalAmount } = req.body;
+
+    if (!matchId || !seatIds || !Array.isArray(seatIds) || seatIds.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide matchId and seatIds array",
+      });
+    }
+
+    const match = await Match.findById(matchId);
+    if (!match) {
+      return res.status(404).json({
+        success: false,
+        message: "Match not found",
+      });
+    }
+
+    if (match.state === "Completed") {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot book seats for completed matches",
+      });
+    }
+
+    if (new Date(match.matchDate) < new Date()) {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot book seats for past matches",
+      });
+    }
+
+    const seats = await Seat.find({
+      _id: { $in: seatIds },
+      match: matchId,
+    });
+
+    if (seats.length !== seatIds.length) {
+      return res.status(400).json({
+        success: false,
+        message: "Some seats not found",
+      });
+    }
+
+    const reservedSeats = seats.filter(seat => seat.state === "reserved");
+    if (reservedSeats.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Some seats are already reserved",
+      });
+    }
+
+    const calculatedAmount = seats.reduce((sum, seat) => sum + seat.ticketPrice, 0);
+
+    const reservation = new Reservation({
+      match: matchId,
+      user: req.user.id,
+      seats: seatIds,
+      totalAmount: calculatedAmount,
+    });
+
+    await reservation.save();
+
+    await Seat.updateMany(
+      { _id: { $in: seatIds } },
+      { $set: { state: "reserved" } }
+    );
+
+    const populatedReservation = await Reservation.findById(reservation._id)
+      .populate({
+        path: "match",
+        populate: { path: "stadium" },
+      })
+      .populate("seats");
+
+    res.status(201).json({
+      success: true,
+      message: "Reservation created successfully",
+      data: populatedReservation,
+    });
+  } catch (err) {
+    console.error("Error creating reservation:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error creating reservation",
+      error: err.message,
+    });
+  }
+});
+
 router.delete(
   "/:reservationId/seat/:seatId",
   authMiddleware,
@@ -41,7 +133,7 @@ router.delete(
       reservation.seats = reservation.seats.filter(
         (s) => s.toString() !== seatId
       );
-      const removedSeat = await seat.findById(seatId);
+      const removedSeat = await Seat.findById(seatId);
       if (removedSeat) {
         reservation.totalAmount -= removedSeat.ticketPrice;
         removedSeat.state = "vacant";
