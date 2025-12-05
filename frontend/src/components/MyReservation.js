@@ -89,7 +89,12 @@ const MyReservation = () => {
     );
 
   if (!reservations.length) {
-    return <div className="matches-wrap">You have no reservations yet.</div>;
+    return (
+      <div className="matches-wrap">
+        <h2 className="page-title">My Reservations</h2>
+        You have no reservations yet.
+      </div>
+    );
   }
 
   return (
@@ -107,7 +112,7 @@ const MyReservation = () => {
                 <div className="teams">
                   <span className="team">Team {match.homeTeam}</span>
                   <span className="vs">vs</span>
-                  <span className="team">Team{match.awayTeam}</span>
+                  <span className="team">Team {match.awayTeam}</span>
                 </div>
                 <div className="date">
                   {matchDate ? matchDate.toLocaleString() : "Date TBA"}
