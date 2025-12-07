@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import './HomePage.css';
 
@@ -9,7 +8,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
 
   useEffect(() => {
     fetchMatches();
@@ -18,9 +17,10 @@ const HomePage = () => {
   const fetchMatches = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3001/api/matches');
-      if (response.data.success) {
-        setMatches(response.data.data);
+      const response = await fetch('http://localhost:3001/api/matches');
+      const data = await response.json();
+      if (data.success) {
+        setMatches(data.data);
       }
     } catch (err) {
       setError('Failed to load matches. Please try again later.');
@@ -193,17 +193,24 @@ const HomePage = () => {
                     <button 
                       className="btn-book"
                       onClick={() => {
-                        if (isAuthenticated) {
+                        if (isAuthenticated && user?.isAuthorized) {
                           navigate(`/book-match/${match._id}`);
+                        } else if (isAuthenticated && !user?.isAuthorized) {
                         } else {
                           navigate('/auth');
                         }
                       }}
-                      disabled={status === 'Sold Out' || status === 'Completed' || status === 'Cancelled'}
+                      disabled={
+                        status === 'Sold Out' || 
+                        status === 'Completed' || 
+                        status === 'Cancelled' ||
+                        (isAuthenticated && !user?.isAuthorized)
+                      }
                     >
                       {status === 'Sold Out' ? 'Sold Out' : 
                        status === 'Completed' ? 'Match Ended' :
                        status === 'Cancelled' ? 'Cancelled' :
+                       isAuthenticated && !user?.isAuthorized ? 'Waiting for Approval' :
                        isAuthenticated ? 'Book Now' : 'Login to Book'}
                     </button>
                   </div>

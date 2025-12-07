@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 import './BookMatch.css';
 
 const BookMatch = () => {
   const { matchId } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const authToken = localStorage.getItem('token');
 
   const [match, setMatch] = useState(null);
@@ -16,15 +17,20 @@ const BookMatch = () => {
   const [booking, setBooking] = useState(false);
 
   useEffect(() => {
+    if (!user?.isAuthorized) {
+      navigate('/dashboard');
+      return;
+    }
     fetchMatchDetails();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [matchId]);
+  }, [matchId, user]);
 
   const fetchMatchDetails = async () => {
     try {
       setLoading(true);
-      const matchResponse = await axios.get(`http://localhost:3001/api/matches`);
-      const matchData = matchResponse.data.data.find(m => m._id === matchId);
+      const matchResponse = await fetch('http://localhost:3001/api/matches');
+      const matchJson = await matchResponse.json();
+      const matchData = matchJson.data.find(m => m._id === matchId);
       
       if (!matchData) {
         setError('Match not found');
@@ -34,13 +40,14 @@ const BookMatch = () => {
       
       setMatch(matchData);
 
-      const seatsResponse = await axios.get(
+      const seatsResponse = await fetch(
         `http://localhost:3001/api/matches/${matchId}/seats`,
         {
           headers: { Authorization: `Bearer ${authToken}` }
         }
       );
-      setSeats(seatsResponse.data.data || seatsResponse.data);
+      const seatsJson = await seatsResponse.json();
+      setSeats(seatsJson.data || seatsJson);
     } catch (err) {
       console.error('Error fetching match details:', err);
       setError('Failed to load match details');
@@ -76,23 +83,33 @@ const BookMatch = () => {
 
     try {
       setBooking(true);
-      await axios.post(
+      const response = await fetch(
         'http://localhost:3001/api/reservations',
         {
-          matchId,
-          seatIds: selectedSeats.map(s => s._id),
-          totalAmount: getTotalAmount()
-        },
-        {
-          headers: { Authorization: `Bearer ${authToken}` }
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authToken}`
+          },
+          body: JSON.stringify({
+            matchId,
+            seatIds: selectedSeats.map(s => s._id),
+            totalAmount: getTotalAmount()
+          })
         }
       );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Booking failed');
+      }
 
       alert('Booking successful!');
       navigate('/my-reservations');
     } catch (err) {
       console.error('Booking error:', err);
-      alert(err.response?.data?.message || 'Booking failed. Please try again.');
+      alert(err.message || 'Booking failed. Please try again.');
     } finally {
       setBooking(false);
     }
