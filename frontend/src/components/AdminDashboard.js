@@ -60,7 +60,7 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = async (userId) => {
-    if (window.confirm('Are you sure you want to permanently delete this user? This action cannot be undone.')) {
+    if (window.confirm('Are you sure you want to delete this user')) {
       try {
         await adminService.deleteUser(userId);
         alert('User deleted successfully!');

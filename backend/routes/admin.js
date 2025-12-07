@@ -3,9 +3,6 @@ const router = express.Router();
 const User = require('../schemas/user');
 const { authMiddleware, isAdmin } = require('../middleware/auth');
 
-// @route   GET /api/admin/users/pending
-// @desc    Get all pending users (waiting for approval)
-// @access  Private/Admin
 router.get('/users/pending', authMiddleware, isAdmin, async (req, res) => {
     try {
         const pendingUsers = await User.find({ 
@@ -27,9 +24,6 @@ router.get('/users/pending', authMiddleware, isAdmin, async (req, res) => {
     }
 });
 
-// @route   GET /api/admin/users
-// @desc    Get all users
-// @access  Private/Admin
 router.get('/users', authMiddleware, isAdmin, async (req, res) => {
     try {
         const users = await User.find().select('-password').sort({ createdAt: -1 });
@@ -49,9 +43,6 @@ router.get('/users', authMiddleware, isAdmin, async (req, res) => {
     }
 });
 
-// @route   PUT /api/admin/users/:id/approve
-// @desc    Approve a user
-// @access  Private/Admin
 router.put('/users/:id/approve', authMiddleware, isAdmin, async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
@@ -87,9 +78,6 @@ router.put('/users/:id/approve', authMiddleware, isAdmin, async (req, res) => {
     }
 });
 
-// @route   PUT /api/admin/users/:id/reject
-// @desc    Reject/Delete a user
-// @access  Private/Admin
 router.delete('/users/:id/reject', authMiddleware, isAdmin, async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
@@ -124,9 +112,6 @@ router.delete('/users/:id/reject', authMiddleware, isAdmin, async (req, res) => 
     }
 });
 
-// @route   DELETE /api/admin/users/:id
-// @desc    Remove an existing user account
-// @access  Private/Admin
 router.delete('/users/:id', authMiddleware, isAdmin, async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
@@ -161,9 +146,6 @@ router.delete('/users/:id', authMiddleware, isAdmin, async (req, res) => {
     }
 });
 
-// @route   GET /api/admin/stats
-// @desc    Get dashboard statistics
-// @access  Private/Admin
 router.get('/stats', authMiddleware, isAdmin, async (req, res) => {
     try {
         const totalUsers = await User.countDocuments();

@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const User = require("../schemas/user");
 require("dotenv").config();
 
-// Generate JWT Token
 const generateToken = (user) => {
   return jwt.sign(
     {
@@ -19,9 +18,6 @@ const generateToken = (user) => {
   );
 };
 
-// @route   POST /api/auth/register
-// @desc    Register a new user
-// @access  Public
 router.post("/register", async (req, res) => {
   try {
     const {
@@ -37,7 +33,6 @@ router.post("/register", async (req, res) => {
       role,
     } = req.body;
 
-    // Validate required fields
     if (
       !username ||
       !password ||
@@ -54,7 +49,6 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    // Check if user already exists
     const existingUser = await User.findOne({
       $or: [{ username }, { email }],
     });
@@ -66,7 +60,6 @@ router.post("/register", async (req, res) => {
       });
     }
 
-    // Create new user
     const user = new User({
       username,
       password,
@@ -78,12 +71,10 @@ router.post("/register", async (req, res) => {
       city,
       address: address || "",
       role: role || "Fan",
-      isAuthorized: false, // All users need admin approval
+      isAuthorized: false, 
     });
 
     await user.save();
-
-    // Generate token
     const token = generateToken(user);
 
     res.status(201).json({
@@ -114,14 +105,10 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// @route   POST /api/auth/login
-// @desc    Login user
-// @access  Public
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Validate input
     if (!username || !password) {
       return res.status(400).json({
         success: false,
@@ -129,7 +116,6 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // Find user (can login with username or email)
     const user = await User.findOne({
       $or: [{ username }, { email: username }],
     });
@@ -141,7 +127,6 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // Check password
     const isPasswordValid = await user.comparePassword(password);
 
     if (!isPasswordValid) {
@@ -151,16 +136,14 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // Check if user is authorized (except for Admin)
     if (!user.isAuthorized && user.role !== "Admin") {
       return res.status(403).json({
         success: false,
         message:
-          "Your account is pending approval. Please wait for admin authorization.",
+          "Your account is pending aproval wait for admin authorization",
       });
     }
 
-    // Generate token
     const token = generateToken(user);
 
     res.json({
@@ -191,9 +174,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// @route   GET /api/auth/me
-// @desc    Get current user
-// @access  Private
 router.get(
   "/me",
   require("../middleware/auth").authMiddleware,

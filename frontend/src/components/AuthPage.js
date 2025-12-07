@@ -37,16 +37,13 @@ const AuthPage = () => {
 
     try {
       if (isLogin) {
-        // Login
         const response = await login({
           username: formData.username,
           password: formData.password
         });
         
         alert(response.message || 'Login successful!');
-        // Redirect or update UI as needed
       } else {
-        // Sign up
         if (formData.password !== formData.confirmPassword) {
           setError('Passwords do not match!');
           setLoading(false);

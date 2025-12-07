@@ -3,7 +3,6 @@ require('dotenv').config();
 
 const authMiddleware = async (req, res, next) => {
     try {
-        // Get token from header
         const token = req.header('Authorization')?.replace('Bearer ', '');
 
         if (!token) {
@@ -13,7 +12,6 @@ const authMiddleware = async (req, res, next) => {
             });
         }
 
-        // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
         next();
@@ -24,8 +22,6 @@ const authMiddleware = async (req, res, next) => {
         });
     }
 };
-
-// Middleware to check if user is admin
 const isAdmin = (req, res, next) => {
     if (req.user.role !== 'Admin') {
         return res.status(403).json({ 
@@ -36,7 +32,6 @@ const isAdmin = (req, res, next) => {
     next();
 };
 
-// Middleware to check if user is manager
 const isManager = (req, res, next) => {
     if (req.user.role !== 'Manager' && req.user.role !== 'Admin') {
         return res.status(403).json({ 
@@ -47,7 +42,7 @@ const isManager = (req, res, next) => {
     next();
 };
 
-// Middleware to check if user is authorized
+
 const isAuthorized = (req, res, next) => {
     if (!req.user.isAuthorized) {
         return res.status(403).json({ 
