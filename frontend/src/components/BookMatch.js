@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './BookMatch.css';
@@ -15,30 +15,40 @@ const BookMatch = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [booking, setBooking] = useState(false);
+  
+  const prevMatchData = useRef(null);
+  const prevSeatsData = useRef(null);
+  const pollingIntervalRef = useRef(null);
 
   useEffect(() => {
     if (!user?.isAuthorized) {
       navigate('/dashboard');
       return;
     }
+    
     fetchMatchDetails();
+    
+    pollingIntervalRef.current = setInterval(fetchMatchDetails, 5000);
+    
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [matchId, user]);
 
   const fetchMatchDetails = async () => {
     try {
-      setLoading(true);
       const matchResponse = await fetch('http://localhost:3001/api/matches');
       const matchJson = await matchResponse.json();
       const matchData = matchJson.data.find(m => m._id === matchId);
       
       if (!matchData) {
         setError('Match not found');
-        setLoading(false);
+        if (loading) setLoading(false);
         return;
       }
-      
-      setMatch(matchData);
 
       const seatsResponse = await fetch(
         `http://localhost:3001/api/matches/${matchId}/seats`,
@@ -47,12 +57,27 @@ const BookMatch = () => {
         }
       );
       const seatsJson = await seatsResponse.json();
-      setSeats(seatsJson.data || seatsJson);
+      const seatsData = seatsJson.data || seatsJson;
+
+      const matchChanged = JSON.stringify(matchData) !== JSON.stringify(prevMatchData.current);
+      const seatsChanged = JSON.stringify(seatsData) !== JSON.stringify(prevSeatsData.current);
+      
+      if (matchChanged || seatsChanged) {
+        setMatch(matchData);
+        setSeats(seatsData);
+        prevMatchData.current = matchData;
+        prevSeatsData.current = seatsData;
+      }
+
+      if (loading) {
+        setLoading(false);
+      }
     } catch (err) {
       console.error('Error fetching match details:', err);
-      setError('Failed to load match details');
-    } finally {
-      setLoading(false);
+      if (loading) {
+        setError('Failed to load match details');
+        setLoading(false);
+      }
     }
   };
 
