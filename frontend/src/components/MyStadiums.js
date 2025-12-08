@@ -196,7 +196,7 @@ const MyStadiums = () => {
 
                 <div className="stadiums-body">
                   <div className="edit-delete-btns">
-                    <button
+                    {/* <button
                       className="edit-stadium"
                       onClick={() => openEditModal(stadium)}
                     >
@@ -207,7 +207,7 @@ const MyStadiums = () => {
                       onClick={() => handleDelete(stadium._id)}
                     >
                       🗑️ Delete
-                    </button>
+                    </button> */}
                   </div>
 
                   <div className="info-row">

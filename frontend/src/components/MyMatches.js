@@ -305,12 +305,12 @@ const MyMatches = () => {
                         >
                           ✏️ Edit
                         </button>
-                        <button
+                        {/* <button
                           className="delete-match"
                           onClick={() => handleDelete(match._id)}
                         >
                           🗑️ Delete
-                        </button>
+                        </button> */}
                       </>
                     )}
                   </div>
